@@ -1,0 +1,33 @@
+# Environment variables (contains API keys)
+.env
+.env.local
+.env.*.local
+
+# Node modules
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Backup and temporary files
+*.bak
+*.tmp
+*.log
+
+# Testing
+coverage/
+.nyc_output/
+
+# Others
+dist/
+build/
