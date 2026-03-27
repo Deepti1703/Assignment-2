@@ -34,7 +34,7 @@ if (!weatherDemo) {
     console.log('🔧 DEMO mode enabled. Using demo weather data.');
 }
 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
 // Generate a personalized weather apology message
@@ -53,7 +53,7 @@ app.post('/api/process', async (req, res) => {
         const weatherPromises = orders.map(async (order) => {
             const cityName = order.city;
             const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${weatherKey}`;
-            
+
             try {
                 // If demo mode, skip API call and use demo data
                 if (weatherDemo) {
@@ -67,7 +67,7 @@ app.post('/api/process', async (req, res) => {
                     }
                     throw new Error('City not in demo data');
                 }
-                
+
                 return await axios.get(apiUrl);
             } catch (error) {
                 // Handle 401 Unauthorized - API key might be new/invalid
@@ -117,16 +117,16 @@ app.post('/api/process', async (req, res) => {
         fs.writeFileSync(path.join(__dirname, 'orders.json'), JSON.stringify(orders, null, 2));
 
         // Return success response
-        res.json({ 
-            success: true, 
+        res.json({
+            success: true,
             message: 'Orders processed successfully',
-            updatedOrders: orders 
+            updatedOrders: orders
         });
     } catch (error) {
         console.error('Server error during order processing:', error);
-        res.status(500).json({ 
+        res.status(500).json({
             success: false,
-            message: 'Server error while processing orders' 
+            message: 'Server error while processing orders'
         });
     }
 });
@@ -148,4 +148,9 @@ function startServer(desiredPort) {
     });
 }
 
-startServer(port);
+if (require.main === module) {
+    startServer(port);
+}
+
+// Export for Vercel serverless functions
+module.exports = app;
