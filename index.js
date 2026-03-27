@@ -113,8 +113,12 @@ app.post('/api/process', async (req, res) => {
             }
         }
 
-        // Step 4: Save updated orders back to the database
-        fs.writeFileSync(path.join(__dirname, 'orders.json'), JSON.stringify(orders, null, 2));
+        // Step 4: Save updated orders back to the database (if possible)
+        try {
+            fs.writeFileSync(path.join(__dirname, 'orders.json'), JSON.stringify(orders, null, 2));
+        } catch (writeErr) {
+            console.warn('⚠️ Could not write to orders.json (read-only filesystem in Vercel). Using memory only.');
+        }
 
         // Return success response
         res.json({
